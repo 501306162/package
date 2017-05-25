@@ -7,10 +7,10 @@ randn('seed', 0);
 m = 1000; % number of examples
 n = 100;  % number of features
 
-A = randn(m,n);
+A = randn(m,n);  % 返回一个m*n的随机项矩阵
 x0 = 10*randn(n,1);
 b = A*x0;
-idx = randsample(m,ceil(m/50));
+idx = randsample(m,ceil(m/50)); % 产生ceil(m/50)个数,范围1:m
 b(idx) = b(idx) + 1e2*randn(size(idx));
 
 %% Solve problem
