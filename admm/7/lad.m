@@ -5,7 +5,7 @@ function [x, history] = lad(A, b, rho, alpha)
 % 
 % Solves the following problem via ADMM:
 % 
-%   minimize     ||Ax - b||_1
+%   minimize  ||z||_1  subject to Ax - z = b
 %
 % The solution is returned in the vector x.
 %
@@ -28,11 +28,11 @@ t_start = tic;
 %% Global constants and defaults
 
 QUIET    = 0;
-MAX_ITER = 1000;
-ABSTOL   = 1e-4;
-RELTOL   = 1e-2;
+MAX_ITER = 1000; 
+ABSTOL   = 1e-4;  % absolute tolerance
+RELTOL   = 1e-2;  % relative tolerance
 
-[m n] = size(A);
+[m n] = size(A); % p n
 
 %% ADMM solver
 
@@ -55,18 +55,20 @@ for k = 1:MAX_ITER
     end
 
     zold = z;
-    Ax_hat = alpha*A*x + (1-alpha)*(zold + b);
-    z = shrinkage(Ax_hat - b + u, 1/rho);
+    Ax_hat = alpha*A*x + (1-alpha)*(zold + b); % over-relaxation with A*x(k+1)
+    z = shrinkage(Ax_hat - b + u, 1/rho); %soft thresholding operator S (section 4.4.3)
+    
 
     u = u + (Ax_hat - z - b);
 
     % diagnostics, reporting, termination checks
 
-    history.objval(k)  = objective(z);
+    history.objval(k)  = objective(z);  %||z||_1
     
-    history.r_norm(k)  = norm(A*x - z - b);
-    history.s_norm(k)  = norm(-rho*A'*(z - zold));
+    history.r_norm(k)  = norm(A*x - z - b); % primal residual
+    history.s_norm(k)  = norm(-rho*A'*(z - zold)); % dual residual
 
+    % stopping criteria :section 3.3
     history.eps_pri(k) = sqrt(m)*ABSTOL + RELTOL*max([norm(A*x), norm(-z), norm(b)]);
     history.eps_dual(k)= sqrt(n)*ABSTOL + RELTOL*norm(rho*A'*u);
     
