@@ -5,7 +5,9 @@ function [x, history] = huber_fit(A, b, rho, alpha)
 % 
 % solves the following problem via ADMM:
 %
-%   minimize 1/2*sum(huber(A*x - b))
+%   minimize huber(A*x - b)
+%   hub(a)=a^2/2     |a|<=1
+%         =|a|-1/2   |a|>1
 %
 % with variable x.
 %
