@@ -60,12 +60,12 @@ for k = 1:MAX_ITER
     
     % x-update
     q = Atb + A'*(z - u);
-    x = U \ (L \ q);
+    x = U \ (L \ q);   % (A'A)\(A')(b+z-u)
     
     % z-update with relaxation
     zold = z;
-    Ax_hat = alpha*A*x + (1-alpha)*(zold + b);
-    tmp = Ax_hat - b + u;
+    Ax_hat = alpha*A*x + (1-alpha)*(zold + b); % relaxation
+    tmp = Ax_hat - b + u; 
     z = rho/(1 + rho)*tmp + 1/(1 + rho)*shrinkage(tmp, 1 + 1/rho);
     
     u = u + (Ax_hat - z - b);
@@ -111,7 +111,7 @@ end
 function [L U] = factor(A)
     [m, n] = size(A);
     if ( m >= n )    % if skinny
-       L = chol( A'*A, 'lower' );
+       L = chol( A'*A, 'lower' );   % L*U =A'*A
     end
     
     % force matlab to recognize the upper / lower triangular structure
