@@ -53,7 +53,9 @@ end
 for k = 1:MAX_ITER
     
     % x-update
+    % [V,D]=eig(A)：求矩阵A的全部特征值，构成对角阵D，并求A的特征向量构成V的列向量。
     [Q,L] = eig(rho*(Z - U) - S);
+    % 输出主对角线上元素,即,所有特征值
     es = diag(L);
     xi = (es + sqrt(es.^2 + 4*rho))./(2*rho);
     X = Q*diag(xi)*Q';
