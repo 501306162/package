@@ -5,8 +5,8 @@ function [z, history] = basis_pursuit(A, b, rho, alpha)
 % 
 % Solves the following problem via ADMM:
 % 
-%   minimize     ||x||_1
-%   subject to   Ax = b
+%   minimize     ||x||_1   <===>  f(x)+||z||_1    
+%   subject to   Ax = b             x-z=0    dom{x∈Rn|Ax=b}
 %
 % The solution is returned in the vector x.
 %
@@ -58,8 +58,8 @@ for k = 1:MAX_ITER
 
     % z-update with relaxation
     zold = z;
-    x_hat = alpha*x + (1 - alpha)*zold;
-    z = shrinkage(x_hat + u, 1/rho);
+    x_hat = alpha*x + (1 - alpha)*zold;   % s.t.x-z=0
+    z = shrinkage(x_hat + u, 1/rho);  
 
     u = u + (x_hat - z);
 
