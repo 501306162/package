@@ -1,6 +1,9 @@
 % Distributed L1 regularized logistic regression
 % (compared against l1_logreg package)
-
+functionname='distr_l1_logreg.m';
+functiondir=which(functionname);
+functiondir=functiondir(1:end-length(functionname));
+addpath([functiondir '/lbfgsb-for-matlab/lbfgsb-for-matlab'])
 %% Generate problem data
 rand('seed', 0);
 randn('seed', 0);
